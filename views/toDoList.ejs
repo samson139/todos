@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>To-Do List</title>
   <link rel="stylesheet" href="/todo.css">
+
+
 </head>
 
 
@@ -137,7 +139,7 @@
       const listItem = document.createElement('li');
       const index = todoList.children.length; // Get the current number of children as the index
       listItem.innerHTML = `
-    <p>${todo.value}</p>
+    <p id="todofromdb">${todo.value}</p>
     <label class="radio-label">
       <input type="radio" name="status_${index}" class="statusRadio" data-index="${index}" value="completed">
       Completed
