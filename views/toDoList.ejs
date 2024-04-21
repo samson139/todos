@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List</title>
+  <link rel="stylesheet" href="/todo.css">
+</head>
+
+
+<body>
+  <h1 class="head-text">This is to do list page!</h1>
+  <button id="logoutBtn" type="button" class="btn btn-primary">Logout</button>
+  <div id="logoutMessage" style="display: none;">
+    Logout successful. Redirecting to sign up page...
+  </div>
+  <div class="container">
+    <form id="todoForm" method="post">
+      <label for="todo">Enter your todo</label>
+      <input type="text" id="todoInput" name="todo" required>
+      <button id="addToDo" type="submit"> Add a task</button>
+    </form>
+    <p class="para">List of your tasks - </p>
+    <div id="todoList">
+      <% if (works.length===0) { %>
+        <h3>You have no todos</h3>
+        <% } else { %>
+          <ul>
+            <% works.forEach((todo, index)=> { %>
+              <li id="todo_<%= index %>">
+
+                <p id="todofromdb">
+                  <%= todo.value %>
+                </p>
+                <!-- Render the value of the todo item -->
+                <label class="radio-label">
+                  <input type="radio" name="status_<%= index %>" class="statusRadio" data-index="<%= index %>"
+                    value="completed" <% if (todo.status) { %>checked<% } %>> Completed
+                </label>
+                <label class="radio-label">
+                  <input type="radio" name="status_<%= index %>" class="statusRadio" data-index="<%= index %>"
+                    value="pending" <% if (!todo.status) { %>checked<% } %>> Pending
+                </label>
+                <button class="deleteBtn" data-index="<%= index %>">Delete</button>
+              </li>
+              <% }); %>
+          </ul>
+
+
+          <% } %>
+    </div>
+  </div>
+  <script>
+
+    //To handle the logout 
+    document.getElementById('logoutBtn').addEventListener('click', async function () {
+      try {
+        const response = await fetch('/logout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          // Clear JWT token and redirect to sign up page
+          document.cookie = 'jwtToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+          document.getElementById('logoutMessage').style.display = 'block'; // Show logout message
+          setTimeout(function () {
+            window.location.href = '/signup'; // Redirect to sign up page
+          }, 2000);
+        } else {
+          console.error('Request failed. Status:', response.status);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    });
+
+
+    //To handle the status of the task
+    document.addEventListener('change', async function (event) {
+      if (event.target.classList.contains('statusRadio')) {
+        const index = event.target.dataset.index;
+        const status = event.target.value === 'completed'; // Convert value to boolean
+
+        try {
+          const response = await fetch(`/toDoList/updateStatus/${index}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status })
+          });
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+    });
+
+
+    //To handle the submit of the single task
+    document.getElementById('todoForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      const todoInput = document.getElementById('todoInput').value.trim();
+      if (!todoInput) {
+        alert('Please enter a non-empty to-do item.');
+        return;
+      }
+
+      try {
+        const response = await fetch('/toDoList', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ task: todoInput, status: false })
+        });
+
+        if (response.ok) {
+          document.getElementById('todoInput').value = '';
+          const newTodo = { value: todoInput, status: false };
+          addTodoToList(newTodo);
+
+        } else {
+          console.error('Request failed. Status:', response.status);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    });
+
+    function addTodoToList(todo) {
+      const todoList = document.getElementById('todoList').querySelector('ul');
+      const listItem = document.createElement('li');
+      const index = todoList.children.length; // Get the current number of children as the index
+      listItem.innerHTML = `
+    <p>${todo.value}</p>
+    <label class="radio-label">
+      <input type="radio" name="status_${index}" class="statusRadio" data-index="${index}" value="completed">
+      Completed
+    </label>
+    <label class="radio-label">
+      <input type="radio" name="status_${index}" class="statusRadio" data-index="${index}" value="pending" checked>
+      Pending
+    </label>
+    <button class="deleteBtn" data-index="${index}">Delete</button>
+  `;
+      todoList.appendChild(listItem);
+    }
+
+
+    document.querySelectorAll('.deleteBtn').forEach(button => {
+      button.addEventListener('click', function () {
+        const index = parseInt(this.getAttribute('data-index'));
+        removeTodo(index);
+      });
+    });
+
+    async function removeTodo(index) {
+
+      console.log({ index });
+      try {
+        const response = await fetch('/removeTodo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ index }),
+        });
+
+        if (response.ok) {
+          console.log('Todo removed successfully');
+          // Update UI to reflect removal (using the correct index)
+          document.getElementById(`todo_${index}`).remove();
+        } else {
+          console.error('Failed to remove todo:', await response.text());
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+  </script>
+</body>
+
+</html>

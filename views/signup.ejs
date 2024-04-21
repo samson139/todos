@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup</title>
+  <link rel="stylesheet" href="/signup.css">
+</head>
+
+<body>
+
+  <div class="parentContainer">
+    <div class="titleContainer">
+      <h1 class="head-text">Welcome to the Signup!</h1>
+      <img id="iconImage" src="./icon.png" alt="icon" />
+    </div>
+  </div>
+  <form id="signupform" class="formControl" method="post">
+    <div class="contentinform">
+      <div class="row-entry">
+        <label for="exampleInputFirstName" class="labels">First name</label>
+        <input type="text" name="firstname" class="inputs" id="exampleInputFirstName" required autofocus />
+      </div>
+
+      <div class="row-entry">
+        <label for="exampleInputLastName" class="labels">Last name</label>
+        <input type="text" name="lastname" class="inputs" id="exampleInputLastName" required />
+      </div>
+
+      <div class="row-entry">
+        <label for="exampleInputEmail1" class="labels">Email address</label>
+        <input type="email" name="email" class="inputs" id="exampleInputEmail1" required />
+      </div>
+
+      <div class="row-entry">
+        <label for="exampleInputPassword1" class="labels">Password</label>
+        <input type="password" name="password" class="inputs" id="exampleInputPassword1" required />
+      </div>
+
+      <div class="row-entry">
+        <label for="exampleInputPassword2" class="labels">Confirm Password</label>
+        <input type="password" name="confirmedPassword" class="inputs" id="exampleInputPassword2" />
+      </div>
+    </div>
+    <div id="responseMessage"></div>
+
+    <button id="signupButton" type="submit" class="btn btn-primary">Signup</button>
+  </form>
+
+  <div class="container">
+    <h3>Already a user ?</h3>
+    <a href="/signin">
+      <button class="signinButton" type="button">Signin</button>
+    </a>
+  </div>
+
+
+  <script>
+    const form = document.getElementById("signupform")
+    const responseMessage = document.getElementById("responseMessage");
+
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const jsonData = {};
+      formData.forEach((value, key) => {
+        jsonData[key] = value;
+      });
+
+      try {
+        const response = await fetch("/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(jsonData)
+        });
+
+        const data = await response.json();
+        console.log(data);
+        console.log(data.message);
+        responseMessage.innerText = data.message;
+        form.reset();
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    });
+  </script>
+</body>
+
+
+</html>

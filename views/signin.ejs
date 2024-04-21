@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signin</title>
+  <!-- <link rel="stylesheet" href="../styles/signin.css"> -->
+
+  <link rel="stylesheet" href="/signin.css">
+</head>
+
+<body>
+  <h3 class="headerText">Please enter your credentials to sign in</h3>
+
+  <form id="signinForm" class="signin-form" method="post">
+    <div class="form-content">
+      <div class="row-entry">
+        <label for="exampleInputEmail1" class="labels">Email address</label>
+        <input type="email" class="row-entry" id="exampleInputEmail1" name="email" required autofocus />
+      </div>
+
+      <div class="row-entry">
+        <label for="exampleInputPassword1" class="labels">Password</label>
+        <input type="password" class="" id="exampleInputPassword1" name="password" required />
+      </div>
+    </div>
+    <p id="warning"></p>
+    <div class="signinAndsignup">
+      <button type="submit" class="btn btn-primary">Signin</button>
+      &nbsp;
+      <a href="/signup">
+        <button type="button" class="btn btn-primary">Signup</button>
+      </a>
+    </div>
+  </form>
+
+
+  <script>
+    const submission = document.getElementById("signinForm")
+    submission.addEventListener("submit", async function (event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      // Get form data
+      const formData = new FormData(this);
+
+      // Convert form data to JSON object
+      const jsonData = {};
+      formData.forEach((value, key) => {
+        jsonData[key] = value;
+      });
+
+      try {
+
+        const response = await fetch("/signin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(jsonData)
+        });
+
+        // Handle response
+        if (response.ok) {
+          const responseData = await response.json();
+          console.log("Signin successful:", responseData);
+          // Redirect or perform any other actions upon successful signin
+          window.location.href = "/toDolist";
+        } else {
+          // Handle signin error
+          const responseData = await response.json();
+          const warning = document.getElementById("warning");
+          warning.innerText = responseData.message;
+          // console.error("Signin failed:", responseData);
+          submission.reset();
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    });
+  </script>
+
+</body>
+
+</html>

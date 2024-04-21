@@ -1,0 +1,67 @@
+
+body{
+  background-image: url('./prof.jpg');
+}
+#signinForm{
+  border:2px solid black;
+}
+
+.headerText{
+  color:rgb(21, 17, 17);
+  font-size: 150%;
+  text-align: center;
+}
+.signin-form  {
+  width: 60%;
+  border: 2px solid black;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2%;
+  background-color: rgb(255, 255, 255);
+  text-align: center;
+}
+
+.form-content {
+  padding: 5%;
+  padding-bottom: 1%;
+  display:grid;
+}
+.row-entry {
+  margin-bottom: 2%;
+}
+label {
+  float:left;
+  margin-left: 20%;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 115%;
+}
+
+input{
+  float:right;
+  margin-right: 20% !important;
+  width: 30%;
+}
+
+.signinAndsignup{
+  margin-bottom: 2%;
+}
+button{
+  width: 20%;
+display:inline-block;
+margin:20px auto;
+background-color: #84c1d5;
+padding:0.2%;
+border-radius: 40px;
+font-weight:bold;
+
+}
+
+button:hover {
+  background-color: #008CBA; 
+  color: white; 
+}
+
+#warning {
+  font-size: 16px;
+  font-family: serif;
+}
