@@ -12,7 +12,6 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 const { log } = require('console');
 
-
 const app = express();
 const secretKey = "this_is_my_secret_key_for_the_jwt_implementation_in_server";
 
@@ -38,7 +37,6 @@ const mongoPromise = mongoose
 
 
 const isAuthenticated = (req, res, next) => {
-
   const token = req.cookies.jwtToken;
   if (!token) {
     return res.status(401).json({ message: 'Unauthorized' });
@@ -63,9 +61,6 @@ app.get('/signup', (req, res) => {
 
 app.get('/signin', (req, res) => {
   res.render('signin');
-});
-app.get('/logout', (req, res) => {
-  res.render('logout');
 });
 
 
@@ -154,7 +149,6 @@ app.post('/signin', (req, res) => {
   }
 });
 
-
 app.get("/protected", isAuthenticated, (req, res) => {
   return res.json({ user: { id: req.userId } });
 });
@@ -183,12 +177,14 @@ app.post('/toDoList', isAuthenticated, async (req, res) => {
       if (existingTaskIndex === -1) {
         todo.taskList.push({ task, status });
         todo = await todo.save();
+        res.status(200).send({ redirectUrl: '/toDoList' });
+
       }
       else {
         return res.status(400).json({ message: 'Task already exists' });
       }
     }
-    res.status(200).json({ message: 'ToDo item added successfully', todo });
+
   } catch (error) {
     console.error('Error saving ToDo:', error);
     res.status(500).json({ message: 'Error saving ToDo', error: error });
@@ -226,19 +222,24 @@ app.post('/removeTodo', isAuthenticated, async (req, res) => {
     if (!user) {
       return res.status(404).send('User not found');
     }
-    let todos = user[0].taskList;
 
+
+    let todos = user[0].taskList;
     console.log("todos of remove", todos);
+
     if (typeof index !== 'number' || index < 0) {
       return res.status(400).send('Invalid index');
     }
-
+    // Remove the todo at the specified index
     todos.splice(index, 1);
-    console.log(todos.splice(index, 1));
+    console.log("todos to delete", todos.splice(index, 1));
+    console.log("todos left", todos);
     await ToDoModel.findOneAndUpdate({ user: req.userId }, { taskList: todos });
 
-    // Remove the todo at the specified index
-    res.status(200).send('Todo removed and database updated successfully');
+    // Send a redirect response to the client
+    res.status(200).send({ redirectUrl: '/toDoList' });
+
+
   } catch (error) {
     console.log('Error:', error);
     res.status(500).send('Internal Server Error');
