@@ -9,38 +9,47 @@
 </head>
 
 <body>
-  <h1 class="head-text">This is to do list page!</h1>
+
   <button id="logoutBtn" type="button" class="btn btn-primary">Logout</button>
+  <h1 class="head-text">This is to do list page!</h1>
   <div id="logoutMessage" style="display: none;">
-    Logout successful. Redirecting to sign up page...
+    Logout successful.Redirecting to sign up page...
   </div>
   <div class="container">
     <form id="todoForm" method="post">
-      <label for="todo">Enter your todo</label>
-      <input type="text" id="todoInput" name="todo" required>
-      <button id="addToDo" type="submit"> Add a task</button>
+      <label for="todoInput" class="label">Enter your todo</label>
+      <input type="text" id="todoInput" class="input" name="todo" required>
+      <button id="addToDo btn" type="submit"> Add task</button>
     </form>
     <p class="para">List of your tasks - </p>
     <div id="todoList">
-      <% if (works.length===0) { %>
-        <h3>You have no todos</h3>
+      <% if(works.length==0) { %>
+        <p>
+          <%= message %>
+        </p>
         <% } else { %>
           <ul>
             <% works.forEach((todo, index)=> { %>
-              <li id="todo_<%= index %>">
-                <p id="todofromdb">
+              <li id="todo_<%= index %>" class="todoItem">
+                <p class="todoText">
                   <%= todo.value %>
                 </p>
                 <!-- Render the value of the todo item -->
-                <label class="radio-label">
-                  <input type="radio" name="status_<%= index %>" class="statusRadio" data-index="<%= index %>"
-                    value="completed" <% if (todo.status) { %>checked<% } %>> Completed
-                </label>
-                <label class="radio-label">
-                  <input type="radio" name="status_<%= index %>" class="statusRadio" data-index="<%= index %>"
-                    value="pending" <% if (!todo.status) { %>checked<% } %>> Pending
-                </label>
-                <button class="deleteBtn" data-index="<%= index %>">Delete</button>
+                <div class="outer">
+                  <div class="status">
+                    <label class="radio-label">
+                      <input type="radio" name="status_<%= index %>" class="statusRadio" data-index="<%= index %>"
+                        value="completed" <% if (todo.status) { %>checked<% } %>> Completed
+                    </label>
+                    <label class="radio-label">
+                      <input type="radio" name="status_<%= index %>" class="statusRadio" data-index="<%= index %>"
+                        value="pending" <% if (!todo.status) { %>checked<% } %>> Pending
+                    </label>
+                  </div>
+                  <div class="btnContainer">
+                    <button class="deleteBtn btn" data-index="<%= index %>">Delete</button>
+                  </div>
+                </div>
               </li>
               <% }); %>
           </ul>
@@ -127,6 +136,7 @@
           console.log('Todo removed successfully');
           // Update UI to reflect removal (using the correct index)
           document.getElementById(`todo_${index}`).remove();
+          window.location.href = '/toDoList';
         } else {
           console.error('Failed to remove todo:', await response.text());
         }

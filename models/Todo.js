@@ -1,13 +1,7 @@
 const mongoose = require('mongoose');
 
 const ToDoSchema = new mongoose.Schema({
-  // value: {
-  //   type: String,
-  // },
-  // description: [{
-  //   type: String,
-  // }],
-  //before 
+
 
   taskList: [{
     task: {

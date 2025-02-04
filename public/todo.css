@@ -1,26 +1,46 @@
 body{
   background-image: url('./prof.jpg');
+  width: 100vw;
+  height: 100vh;
 }
 
-#logoutBtn {
+#logoutBtn{
   position: fixed;
   top: 0;
   right: 0;
-  width: 10%;
   margin-right: 5%;
-  background-color: aliceblue;
 }
+
+.label{
+  font-size: 132%;
+  font-weight: bolder;
+}
+
+.label,.input{
+  width: 33.33%;
+}
+
+#todoForm{
+  width:100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 2%;
+}
+
 .head-text{
-  margin-top: 5%;
+  margin-top: 80px;
   text-align: center;
 }
+
 button:hover {
   background-color: #008CBA; 
   color: white; 
 }
 
-button{
-width: 20%;
+button {
+width: 12%;
+min-width: 70px;
 margin:20px auto;
 background-color: #84c1d5;
 padding:0.2%;
@@ -28,50 +48,123 @@ border-radius: 40px;
 font-weight: bold;
 }
 
+.para {
+  font-size:150%;
+  font-weight: bold;
+}
+
 .container {
   width: 60%;
-  border: 2px solid black;
+  max-width: 600px;
+  border-radius: 8%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 2%;
+  padding:5%;
   background-color: rgb(255, 255, 255);
 }
-#todoForm label {
-margin-left: 10%;
-font-size: 130%;
-margin-right: 2%;
-font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
-}
-#todolist label {
-  font-size: 0.7%;
-  margin-right: 1%;
-  margin-left: 1%;
-}
-.para{
-  margin-left: 2%;
+
+.todoText{
+  display: block;
+  margin-top: 0;
+  margin-bottom: 0; 
   font-size: 200%;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-#todofromdb{
-  font-size: 120%;
+.todoItem {
+  width: 100%;
+  display: flex;
+  padding: 2%;
+  flex-direction: column;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   font-weight: bolder;
-  font-family:Georgia, 'Times New Roman', Times, serif;
+  border-bottom: 3px dotted gray;
 }
 
-.deleteBtn{
-  margin-left: 40%;
-}
-#todoInput{
-  margin-right: 1%;
-  width: 30%;
+.outer{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
 }
 
-li{
-  margin-left: 3%;
-  margin-right: 3%;
-  border-bottom: 3px dotted black;
+.status {
+  display: flex;
+  justify-content: space-around;
 }
-.radio-label {
-  font-size: small;
+
+.status, .btnContainer{
+  width:50%;
 }
+
+.btnContainer{
+  display: flex;
+  justify-content: flex-end;
+}
+#logoutMessage{
+  position:fixed;
+  top: 20px;
+  left:10px;
+  font-size: 80%;
+  font-weight: bolder;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  letter-spacing: 1px;
+  color:rgb(2, 1, 1)
+}
+
+@media screen and (max-width: 728px) {
+  
+  .container{
+    width:80%;
+    margin-top: 10px;
+    border: 2px solid black;
+    border-radius: 5%;
+    padding:5%;
+  }
+  .todoItem {
+  width: 100%;
+  display: flex;
+  padding: 1%;
+  flex-direction: column;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-weight: bolder;
+  font-size: 10px;
+ }
+ .btn{
+  font-size: 12px;
+ }
+
+ .label{
+  font-size: 18px;
+  font-weight: bolder;
+}
+}
+
+@media screen and (max-width: 420px) {
+  
+  .container{
+    width:80%;
+    margin-top: 10px;
+    border: 2px solid black;
+    border-radius: 5%;
+    padding:5%;
+  }
+  .todoItem {
+  width: 100%;
+  display: flex;
+  padding: 1%;
+  flex-direction: column;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-weight: bolder;
+  font-size: 10px;
+ }
+ .btn{
+  font-size: 12px;
+ }
+
+ .label{
+  font-size: 14px;
+  font-weight: bolder;
+}
+  
+}
+

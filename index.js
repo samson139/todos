@@ -96,8 +96,8 @@ app.post('/signup', async (req, res) => {
             res.status(201).json({ message: 'User created successfully' });
           })
           .catch((error) => {
-
-            console.error("error is:", error);
+            ;
+            console.error("error is:", error)
             res.status(500).json({ message: 'Error creating user', error: error });
           });
       }
@@ -177,8 +177,8 @@ app.post('/toDoList', isAuthenticated, async (req, res) => {
       if (existingTaskIndex === -1) {
         todo.taskList.push({ task, status });
         todo = await todo.save();
-        res.status(200).send({ redirectUrl: '/toDoList' });
-
+        // res.status(200).send({ redirectUrl: '/toDoList' });
+        res.redirect('/toDoList');
       }
       else {
         return res.status(400).json({ message: 'Task already exists' });
@@ -193,17 +193,20 @@ app.post('/toDoList', isAuthenticated, async (req, res) => {
 
 app.get('/toDolist', isAuthenticated, async (req, res) => {
   try {
-
     const singleUser = await ToDoModel.findOne({ user: req.userId });
     console.log("singleUser", singleUser);
     const todos = singleUser?.taskList || [];
-    console.log("todos", todos);
+    console.log("todos", todos)
+    if (todos.length == 0) {
+      res.render('toDoList', { works: [], message: 'No tasks' });
+      return;
+    }
     const works = todos.map(todo => ({
       value: todo.task,
       status: todo.status
     }));
     console.log("works", works);
-    res.render('toDoList', { works });
+    res.render('toDoList', { works, message: '' });
   } catch (error) {
     console.error('Error fetching todos:', error);
     res.status(500).json({ message: 'Error fetching todos', error: error });
@@ -212,18 +215,13 @@ app.get('/toDolist', isAuthenticated, async (req, res) => {
 
 
 app.post('/removeTodo', isAuthenticated, async (req, res) => {
-
   let { index } = req.body;
-
   try {
-
     const user = await ToDoModel.find({ user: req.userId });
     console.log("user", user);
     if (!user) {
       return res.status(404).send('User not found');
     }
-
-
     let todos = user[0].taskList;
     console.log("todos of remove", todos);
 
@@ -232,16 +230,9 @@ app.post('/removeTodo', isAuthenticated, async (req, res) => {
     }
     // Remove the todo at the specified index
     todos.splice(index, 1);
-    console.log("todos to delete", todos.splice(index, 1));
-    console.log("todos left", todos);
     await ToDoModel.findOneAndUpdate({ user: req.userId }, { taskList: todos });
-
-    // Send a redirect response to the client
-    res.status(200).send({ redirectUrl: '/toDoList' });
-
-
+    res.redirect('/toDoList');
   } catch (error) {
-    console.log('Error:', error);
     res.status(500).send('Internal Server Error');
   }
 });
@@ -254,8 +245,7 @@ app.put('/toDoList/updateStatus/:index', isAuthenticated, async (req, res) => {
   try {
     let user = await ToDoModel.findOne({ user: userId });
     index = parseInt(index, 10);
-    console.log("typ", typeof index);
-    console.log("index", index);
+
 
     if (!user) {
       return res.status(404).json({ message: 'ToDo item not found' });
@@ -265,15 +255,11 @@ app.put('/toDoList/updateStatus/:index', isAuthenticated, async (req, res) => {
       return res.status(400).json({ message: 'Invalid index' });
     }
 
-    console.log("tasklist", user.taskList[index]);
-
     user.taskList[index].status = status;
     user.markModified('taskList');
     await user.save();
-    console.log("updated user", user);
-    res.status(200).json({ message: 'Status updated successfully', user });
+    res.redirect('/toDoList');
   } catch (error) {
-    console.error('Error updating status:', error);
     res.status(500).json({ message: 'Error updating status', error: error });
   }
 });
