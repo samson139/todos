@@ -264,7 +264,7 @@ app.put('/toDoList/updateStatus/:index', isAuthenticated, async (req, res) => {
   }
 });
 
-module.exports = app;
-// app.listen(3002, () => {
-//   console.log(`Server listening at 3002`);
-// });
+
+app.listen(3002, () => {
+  console.log(`Server listening at 3002`);
+});
